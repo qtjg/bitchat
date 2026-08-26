@@ -8,6 +8,16 @@ struct WaveformView: View {
     let isInteractive: Bool
     @ThemedPalette private var palette
 
+    /// Converts a gesture location into a bounded playback fraction.
+    ///
+    /// Keep this separate from the gesture so the coordinate contract can be
+    /// tested without mounting SwiftUI. A zero-sized geometry can occur while
+    /// a row is being laid out and must not result in a bogus seek.
+    static func seekFraction(forX x: CGFloat, inWidth width: CGFloat) -> Double? {
+        guard width > 0 else { return nil }
+        return max(0, min(1, Double(x / width)))
+    }
+
     private var clampedPlayback: Double {
         max(0, min(1, playbackProgress))
     }
@@ -52,11 +62,19 @@ struct WaveformView: View {
                 if isInteractive, let onSeek = onSeek {
                     Color.clear
                         .contentShape(Rectangle())
+                        // The private conversation drops its high-priority
+                        // swipe-to-leave gesture while a note is playing, so
+                        // drag-seeking remains available without allowing a
+                        // scrub to close the conversation. Keep the original
+                        // zero-distance drag: users can press, slide to a
+                        // target, and release to seek.
                         .gesture(
-                            DragGesture(minimumDistance: 0)
+                            DragGesture(minimumDistance: 0, coordinateSpace: .local)
                                 .onEnded { value in
-                                    guard geometry.size.width > 0 else { return }
-                                    let fraction = max(0, min(1, value.location.x / geometry.size.width))
+                                    guard let fraction = Self.seekFraction(
+                                        forX: value.location.x,
+                                        inWidth: geometry.size.width
+                                    ) else { return }
                                     onSeek(fraction)
                                 }
                         )
