@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="docs/assets/3d-banner.svg" alt="bitchat 3D banner" width="880" />
+</p>
+
 <!-- ⬡ 3D-UPGRADE v1 by Mayank Bhaskar -->
 <div align="center">
 
@@ -33,6 +37,22 @@ A decentralized peer-to-peer messaging app with dual transport architecture: loc
 Install from the App Store, or build from source you have verified. A compiled build from anywhere else cannot be verified — see [Verifying bitchat](docs/VERIFYING-A-BUILD.md) for how to check source against the per-release hash manifest, and for what to do if that is the only build you can get.
 
 This matters more than it usually would: this repository has been the target of takedown demands, and when a repository or releases page disappears, mirrors appear that nobody can check.
+
+
+---
+
+## 🧊 3D Visuals
+
+<p align="center">
+  <img src="docs/assets/3d-langs.svg" alt="bitchat — 3D language stack" width="800" />
+</p>
+
+Isometric 3D language stack computed from live GitHub language stats.
+Regenerate the graphics any time with the built-in generator — stdlib only, zero dependencies:
+
+```bash
+python tools/generate_3d_assets.py
+```
 
 ## License
 
